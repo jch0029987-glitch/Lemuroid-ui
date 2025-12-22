@@ -1,6 +1,7 @@
+import com.swordfish.lemuroid.common.system.GpuInfo
+import com.swordfish.lemuroid.common.system.GraphicsSettings
 package com.swordfish.lemuroid.app.mobile.feature.settings.advanced
 import androidx.compose.ui.platform.LocalContext
-import com.swordfish.lemuroid.common.system.GpuInfo
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
@@ -26,7 +27,6 @@ import com.swordfish.lemuroid.app.utils.android.settings.LemuroidSettingsSwitch
 import com.swordfish.lemuroid.app.utils.android.settings.booleanPreferenceState
 import com.swordfish.lemuroid.app.utils.android.settings.indexPreferenceState
 import com.swordfish.lemuroid.app.utils.android.settings.intPreferenceState
-import com.swordfish.lemuroid.common.system.GpuInfo
 @Composable
 fun AdvancedSettingsScreen(
     modifier: Modifier = Modifier,
