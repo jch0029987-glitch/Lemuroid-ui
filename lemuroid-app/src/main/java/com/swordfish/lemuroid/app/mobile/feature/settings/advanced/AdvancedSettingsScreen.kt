@@ -46,18 +46,12 @@ fun AdvancedSettingsScreen(
         }
 
         InputSettings()
-    GraphicsSettings()
-    GraphicsSettings()
-    GraphicsSettings()
         GeneralSettings(uiState.cache, viewModel, navController)
     }
 }
 
 @Composable
 private fun InputSettings() {
-    GraphicsSettings()
-    GraphicsSettings()
-    GraphicsSettings()
     LemuroidCardSettingsGroup(
         title = { Text(text = stringResource(id = R.string.settings_category_input)) },
     ) {
