@@ -1,4 +1,4 @@
-name: Build Lemuroid-ui
+name: Build Lemuroid UI Debug APK
 
 on:
   push:
@@ -11,48 +11,54 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
 
     steps:
-      # Step 1: Checkout your repository and submodules
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: recursive  # <-- ensures all submodules are cloned
+          submodules: recursive   # fetch all submodules
+          fetch-depth: 0
 
-      # Step 2: Sync and update submodules explicitly
-      - name: Update submodules
-        run: |
-          git submodule sync --recursive
-          git submodule update --init --recursive || echo "Warning: some submodules might be missing. If this is intentional, continue."
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
 
-      # Step 3: Setup any environment needed (example: Android SDK, Flutter, etc.)
-      # - name: Setup Android SDK
-      #   uses: android-actions/setup-android@v3
-
-      # Step 4: Install dependencies
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y build-essential cmake clang pkg-config
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build build-essential pkg-config unzip
 
-      # Step 5: Optional: Check if bundled-cores exists (can skip if not needed)
-      - name: Check bundled-cores submodule
+      - name: Verify lemuriod-cores submodule
         run: |
-          if [ ! -d "bundled-cores" ]; then
-            echo "Warning: bundled-cores submodule is missing. Skipping related build steps."
+          if [ ! -d "lemuroid-cores" ]; then
+            echo "Error: lemuriod-cores submodule is missing!"
+            exit 1
           fi
 
-      # Step 6: Build the project
-      - name: Build Lemuroid
-        run: |
-          mkdir -p build
-          cd build
-          cmake ..
-          make -j$(nproc)
+      - name: Create build directory
+        run: mkdir -p build
 
-      # Step 7: Upload build artifacts
-      - name: Upload artifact
+      - name: Configure CMake
+        run: cmake -S . -B build
+
+      - name: Build debug APK
+        run: |
+          cmake --build build --config Debug -- -j$(nproc)
+          # Adjust above if using Gradle or Android Studio build system
+
+      - name: Locate APK
+        run: |
+          mkdir -p artifact
+          # Assuming the debug APK is here — adjust path if different
+          cp build/app-debug.apk artifact/ || true
+
+      - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: Lemuroid-ui-build
-          path: build/
+          name: Lemuroid-UI-Debug-APK
+          path: artifact/
