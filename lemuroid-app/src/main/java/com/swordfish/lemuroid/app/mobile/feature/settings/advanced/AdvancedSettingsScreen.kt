@@ -24,7 +24,7 @@ import com.swordfish.lemuroid.app.utils.android.settings.LemuroidSettingsSwitch
 import com.swordfish.lemuroid.app.utils.android.settings.booleanPreferenceState
 import com.swordfish.lemuroid.app.utils.android.settings.indexPreferenceState
 import com.swordfish.lemuroid.app.utils.android.settings.intPreferenceState
-
+import com.swordfish.lemuroid.common.system.GpuInfo
 @Composable
 fun AdvancedSettingsScreen(
     modifier: Modifier = Modifier,
@@ -44,12 +44,14 @@ fun AdvancedSettingsScreen(
         }
 
         InputSettings()
+    GraphicsSettings()
         GeneralSettings(uiState.cache, viewModel, navController)
     }
 }
 
 @Composable
 private fun InputSettings() {
+    GraphicsSettings()
     LemuroidCardSettingsGroup(
         title = { Text(text = stringResource(id = R.string.settings_category_input)) },
     ) {
