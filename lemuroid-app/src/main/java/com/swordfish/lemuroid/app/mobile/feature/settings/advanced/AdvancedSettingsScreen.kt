@@ -1,4 +1,6 @@
 package com.swordfish.lemuroid.app.mobile.feature.settings.advanced
+import androidx.compose.ui.platform.LocalContext
+import com.swordfish.lemuroid.common.system.GpuInfo
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
@@ -46,12 +48,14 @@ fun AdvancedSettingsScreen(
         InputSettings()
     GraphicsSettings()
     GraphicsSettings()
+    GraphicsSettings()
         GeneralSettings(uiState.cache, viewModel, navController)
     }
 }
 
 @Composable
 private fun InputSettings() {
+    GraphicsSettings()
     GraphicsSettings()
     GraphicsSettings()
     LemuroidCardSettingsGroup(
