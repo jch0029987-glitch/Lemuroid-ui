@@ -25,21 +25,21 @@ jobs:
           java-version: '17'
 
       - name: Build Debug APK
-        working-directory: ./Lemuroid-ui
+        working-directory: ./  # root of the repo
         run: ./gradlew assembleDebug
 
       - name: Build Release APK
-        working-directory: ./Lemuroid-ui
+        working-directory: ./  # root of the repo
         run: ./gradlew assembleRelease
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: lemuroid-ui-debug
-          path: Lemuroid-ui/app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
           name: lemuroid-ui-release
-          path: Lemuroid-ui/app/build/outputs/apk/release/app-release.apk
+          path: app/build/outputs/apk/release/app-release.apk
