@@ -1,4 +1,4 @@
-name: Build Lemuroid UI Debug APK
+name: Android Build
 
 on:
   push:
@@ -11,54 +11,35 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout repo with submodules
+        uses: actions/checkout@v3
         with:
-          submodules: recursive   # fetch all submodules
-          fetch-depth: 0
+          submodules: recursive
 
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake ninja-build build-essential pkg-config unzip
+      - name: Build Debug APK
+        working-directory: ./Lemuroid-ui
+        run: ./gradlew assembleDebug
 
-      - name: Verify lemuriod-cores submodule
-        run: |
-          if [ ! -d "lemuroid-cores" ]; then
-            echo "Error: lemuriod-cores submodule is missing!"
-            exit 1
-          fi
+      - name: Build Release APK
+        working-directory: ./Lemuroid-ui
+        run: ./gradlew assembleRelease
 
-      - name: Create build directory
-        run: mkdir -p build
-
-      - name: Configure CMake
-        run: cmake -S . -B build
-
-      - name: Build debug APK
-        run: |
-          cmake --build build --config Debug -- -j$(nproc)
-          # Adjust above if using Gradle or Android Studio build system
-
-      - name: Locate APK
-        run: |
-          mkdir -p artifact
-          # Assuming the debug APK is here — adjust path if different
-          cp build/app-debug.apk artifact/ || true
-
-      - name: Upload debug APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: Lemuroid-UI-Debug-APK
-          path: artifact/
+          name: lemuroid-ui-debug
+          path: Lemuroid-ui/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lemuroid-ui-release
+          path: Lemuroid-ui/app/build/outputs/apk/release/app-release.apk
