@@ -1,3 +1,4 @@
+package com.swordfish.lemuroid.app.mobile.feature.settings.advanced
 
 
 import com.swordfish.lemuroid.common.system.GpuInfo
