@@ -161,11 +161,11 @@ class GameViewModelRetroGameView(
         if (currentState !is GameState.Loaded) throw IllegalStateException("Game is not loaded.")
 
         val result =
-            GLRetroView(context, currentState.retroViewData)
-                .apply {
-                    isFocusable = false
-                    isFocusableInTouchMode = false
-                }
+GLRetroView(context, currentState.retroViewData).apply {
+    isFocusable = false
+    isFocusableInTouchMode = false
+    // YOUR MODIFICATIONS HERE
+}
 
         if (!system.hasTouchScreen) {
             result.disableTouchEvents()
