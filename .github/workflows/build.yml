@@ -1,45 +1,40 @@
-name: Android Build
+name: Build Debug APK
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo with submodules
+      # Checkout repo and submodules
+      - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          submodules: recursive
+          submodules: true  # ensures bundled-cores and any other submodules are fetched
 
+      # Set up JDK 17
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17
 
+      # Set up Gradle
+      - name: Set up Gradle
+        uses: gradle/gradle-build-action@v3
+
+      # Build debug APK
       - name: Build Debug APK
-        working-directory: ./  # root of the repo
-        run: ./gradlew assembleDebug
+        run: gradle assembleDebug
 
-      - name: Build Release APK
-        working-directory: ./  # root of the repo
-        run: ./gradlew assembleRelease
-
+      # Upload the APK as an artifact
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: lemuroid-ui-debug
+          name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Upload Release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: lemuroid-ui-release
-          path: app/build/outputs/apk/release/app-release.apk
