@@ -47,7 +47,7 @@ jobs:
 
       # 6️⃣ Upload APK artifact
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Lemuroid-debug-apk
           path: lemuroid-app/build/outputs/apk/debug/*.apk
