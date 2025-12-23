@@ -2,42 +2,50 @@ name: Build Debug APK
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
   build-debug-apk:
-    name: Build Debug APK
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
-      # Checkout your repo
+      # 1. Checkout repo including submodules
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: recursive  # make sure submodules are fetched
+          submodules: recursive
+          fetch-depth: 0
 
-      # Set up JDK
-      - name: Set up JDK 17
+      # 2. Setup JDK
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
-      # Grant execute permission to gradlew
-      - name: Make Gradle Wrapper executable
-        run: chmod +x ./gradlew
+      # 3. Print Gradle & Java version for debugging
+      - name: Print Java and Gradle version
+        run: |
+          java -version
+          ./gradlew --version
 
-      # Build the debug APK
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug
+      # 4. Clean build directory to avoid incremental issues
+      - name: Clean project
+        run: ./gradlew clean
 
-      # Upload the APK as an artifact
+      # 5. Build Debug APK (disable bundle splitting for simplicity)
+      - name: Assemble Debug APK
+        run: ./gradlew assembleDebug -Pandroid.bundle.enableUncompressedNativeLibs=false
+
+      # 6. Upload APK as artifact
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: debug-apk
+          name: Lemuroid-debug-apk
           path: |
-            lemuroid-app/build/outputs/apk/debug/*.apk
+            lemuroid-app/build/outputs/apk/debug/lemuroid-app-debug.apk
