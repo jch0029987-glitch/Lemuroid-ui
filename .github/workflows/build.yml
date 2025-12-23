@@ -26,8 +26,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build DEBUG APK only (NO bundles)
-        run: ./gradlew :lemuroid-app:assembleFreeDebug --no-daemon
-
+        run: ./gradlew :lemuroid-app:assembleFreeDynamicDebug --no-daemon
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
