@@ -40,7 +40,7 @@ jobs:
 
       # 5. Build Debug APK (disable bundle splitting for simplicity)
       - name: Assemble Debug APK
-        run: ./gradlew assembleDebug -Pandroid.bundle.enableUncompressedNativeLibs=false
+        run: ./gradlew assembleDebug
 
       # 6. Upload APK as artifact
       - name: Upload Debug APK
