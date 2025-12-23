@@ -49,6 +49,24 @@ fun AdvancedSettingsScreen(
         InputSettings()
         GeneralSettings(uiState.cache, viewModel, navController)
     }
+        LemuroidCardSettingsGroup(
+      title = "GPU Info",
+      content = {
+        LemuroidSettingsPage {
+         LemuroidSettingsMenuLink(
+           title = "Vendor: ${GpuInfo.getVendor(context)}",
+           onClick = {}
+         )
+         LemuroidSettingsMenuLink(
+           title = "Renderer: ${GpuInfo.getRenderer(context)}",
+           onClick = {}
+         )
+         LemuroidSettingsMenuLink(
+           title = "Vulkan Supported: ${GpuInfo.isVulkanSupported()}",
+           onClick = {}
+         )
+        }
+      })
 }
 
 @Composable
@@ -80,6 +98,24 @@ private fun InputSettings() {
             title = { Text(text = stringResource(R.string.settings_title_tilt_sensitivity)) },
         )
     }
+        LemuroidCardSettingsGroup(
+      title = "GPU Info",
+      content = {
+        LemuroidSettingsPage {
+         LemuroidSettingsMenuLink(
+           title = "Vendor: ${GpuInfo.getVendor(context)}",
+           onClick = {}
+         )
+         LemuroidSettingsMenuLink(
+           title = "Renderer: ${GpuInfo.getRenderer(context)}",
+           onClick = {}
+         )
+         LemuroidSettingsMenuLink(
+           title = "Vulkan Supported: ${GpuInfo.isVulkanSupported()}",
+           onClick = {}
+         )
+        }
+      })
 }
 
 @Composable
@@ -123,6 +159,24 @@ private fun GeneralSettings(
     if (factoryResetDialogState.value) {
         FactoryResetDialog(factoryResetDialogState, viewModel, navController)
     }
+        LemuroidCardSettingsGroup(
+      title = "GPU Info",
+      content = {
+        LemuroidSettingsPage {
+         LemuroidSettingsMenuLink(
+           title = "Vendor: ${GpuInfo.getVendor(context)}",
+           onClick = {}
+         )
+         LemuroidSettingsMenuLink(
+           title = "Renderer: ${GpuInfo.getRenderer(context)}",
+           onClick = {}
+         )
+         LemuroidSettingsMenuLink(
+           title = "Vulkan Supported: ${GpuInfo.isVulkanSupported()}",
+           onClick = {}
+         )
+        }
+      })
 }
 
 @Composable
@@ -154,4 +208,22 @@ private fun FactoryResetDialog(
             }
         },
     )
+        LemuroidCardSettingsGroup(
+      title = "GPU Info",
+      content = {
+        LemuroidSettingsPage {
+         LemuroidSettingsMenuLink(
+           title = "Vendor: ${GpuInfo.getVendor(context)}",
+           onClick = {}
+         )
+         LemuroidSettingsMenuLink(
+           title = "Renderer: ${GpuInfo.getRenderer(context)}",
+           onClick = {}
+         )
+         LemuroidSettingsMenuLink(
+           title = "Vulkan Supported: ${GpuInfo.isVulkanSupported()}",
+           onClick = {}
+         )
+        }
+      })
 }
