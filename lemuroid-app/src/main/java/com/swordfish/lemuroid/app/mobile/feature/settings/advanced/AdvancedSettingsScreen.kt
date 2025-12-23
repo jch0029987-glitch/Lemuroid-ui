@@ -50,7 +50,6 @@ fun AdvancedSettingsScreen(
         GeneralSettings(uiState.cache, viewModel, navController)
     }
         LemuroidCardSettingsGroup(
-      title = "GPU Info",
       content = {
         LemuroidSettingsPage {
          LemuroidSettingsMenuLink(
@@ -71,6 +70,7 @@ fun AdvancedSettingsScreen(
 
 @Composable
 private fun InputSettings() {
+    val context = LocalContext.current
     LemuroidCardSettingsGroup(
         title = { Text(text = stringResource(id = R.string.settings_category_input)) },
     ) {
@@ -99,7 +99,6 @@ private fun InputSettings() {
         )
     }
         LemuroidCardSettingsGroup(
-      title = "GPU Info",
       content = {
         LemuroidSettingsPage {
          LemuroidSettingsMenuLink(
@@ -160,7 +159,6 @@ private fun GeneralSettings(
         FactoryResetDialog(factoryResetDialogState, viewModel, navController)
     }
         LemuroidCardSettingsGroup(
-      title = "GPU Info",
       content = {
         LemuroidSettingsPage {
          LemuroidSettingsMenuLink(
@@ -209,7 +207,6 @@ private fun FactoryResetDialog(
         },
     )
         LemuroidCardSettingsGroup(
-      title = "GPU Info",
       content = {
         LemuroidSettingsPage {
          LemuroidSettingsMenuLink(
