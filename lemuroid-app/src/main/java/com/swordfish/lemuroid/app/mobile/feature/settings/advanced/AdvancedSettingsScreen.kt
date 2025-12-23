@@ -1,8 +1,5 @@
 package com.swordfish.lemuroid.app.mobile.feature.settings.advanced
 
-package com.swordfish.lemuroid.app.mobile.feature.settings.advanced
-
-
 import com.swordfish.lemuroid.common.system.GpuInfo
 import com.swordfish.lemuroid.common.system.GraphicsSettings
 import androidx.compose.ui.platform.LocalContext
