@@ -53,15 +53,15 @@ fun AdvancedSettingsScreen(
       content = {
         LemuroidSettingsPage {
          LemuroidSettingsMenuLink(
-           title = "Vendor: ${GpuInfo.getVendor(context)}",
+           title = { Text("Vendor: ${GpuInfo.getVendor(context)}") },
            onClick = {}
          )
          LemuroidSettingsMenuLink(
-           title = "Renderer: ${GpuInfo.getRenderer(context)}",
+           title = { Text("Renderer: ${GpuInfo.getRenderer(context)}") },
            onClick = {}
          )
          LemuroidSettingsMenuLink(
-           title = "Vulkan Supported: ${GpuInfo.isVulkanSupported()}",
+           title = { Text("Vulkan Supported: ${GpuInfo.isVulkanSupported()}") },
            onClick = {}
          )
         }
@@ -102,15 +102,15 @@ private fun InputSettings() {
       content = {
         LemuroidSettingsPage {
          LemuroidSettingsMenuLink(
-           title = "Vendor: ${GpuInfo.getVendor(context)}",
+           title = { Text("Vendor: ${GpuInfo.getVendor(context)}") },
            onClick = {}
          )
          LemuroidSettingsMenuLink(
-           title = "Renderer: ${GpuInfo.getRenderer(context)}",
+           title = { Text("Renderer: ${GpuInfo.getRenderer(context)}") },
            onClick = {}
          )
          LemuroidSettingsMenuLink(
-           title = "Vulkan Supported: ${GpuInfo.isVulkanSupported()}",
+           title = { Text("Vulkan Supported: ${GpuInfo.isVulkanSupported()}") },
            onClick = {}
          )
         }
@@ -162,15 +162,15 @@ private fun GeneralSettings(
       content = {
         LemuroidSettingsPage {
          LemuroidSettingsMenuLink(
-           title = "Vendor: ${GpuInfo.getVendor(context)}",
+           title = { Text("Vendor: ${GpuInfo.getVendor(context)}") },
            onClick = {}
          )
          LemuroidSettingsMenuLink(
-           title = "Renderer: ${GpuInfo.getRenderer(context)}",
+           title = { Text("Renderer: ${GpuInfo.getRenderer(context)}") },
            onClick = {}
          )
          LemuroidSettingsMenuLink(
-           title = "Vulkan Supported: ${GpuInfo.isVulkanSupported()}",
+           title = { Text("Vulkan Supported: ${GpuInfo.isVulkanSupported()}") },
            onClick = {}
          )
         }
@@ -210,17 +210,38 @@ private fun FactoryResetDialog(
       content = {
         LemuroidSettingsPage {
          LemuroidSettingsMenuLink(
-           title = "Vendor: ${GpuInfo.getVendor(context)}",
+           title = { Text("Vendor: ${GpuInfo.getVendor(context)}") },
            onClick = {}
          )
          LemuroidSettingsMenuLink(
-           title = "Renderer: ${GpuInfo.getRenderer(context)}",
+           title = { Text("Renderer: ${GpuInfo.getRenderer(context)}") },
            onClick = {}
          )
          LemuroidSettingsMenuLink(
-           title = "Vulkan Supported: ${GpuInfo.isVulkanSupported()}",
+           title = { Text("Vulkan Supported: ${GpuInfo.isVulkanSupported()}") },
            onClick = {}
          )
         }
       })
+}
+
+@Composable
+private fun GpuInfoSection() {
+    val context = LocalContext.current
+    LemuroidCardSettingsGroup(
+        title = { Text("GPU Info") }
+    ) {
+        LemuroidSettingsMenuLink(
+            title = { Text("Vendor: ${GpuInfo.getVendor(context)}") },
+            onClick = {}
+        )
+        LemuroidSettingsMenuLink(
+            title = { Text("Renderer: ${GpuInfo.getRenderer(context)}") },
+            onClick = {}
+        )
+        LemuroidSettingsMenuLink(
+            title = { Text("Vulkan Supported: ${GpuInfo.isVulkanSupported()}") },
+            onClick = {}
+        )
+    }
 }
