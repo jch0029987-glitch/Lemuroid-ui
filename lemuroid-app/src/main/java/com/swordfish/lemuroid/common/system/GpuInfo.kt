@@ -9,16 +9,17 @@ import javax.microedition.khronos.egl.EGLContext
 
 object GpuInfo {
 
-    enum class MaliArchitecture(val generation: String) {
-        UTGARD("Utgard (Old: Mali-400/450)"),
-        MIDGARD("Midgard (T-Series: Mali-T6xx/7xx/8xx)"),
-        BIFROST("Bifrost (G-Series: Mali-G31/51/71/72/76)"),
-        VALHALL("Valhall (New: Mali-G77/78/710/715/G610)"),
-        UNKNOWN("Unknown Mali Architecture")
+    enum class MaliArchitecture(val generation: String, val supportsTE: Boolean, val supportsAFBC: Boolean) {
+        UTGARD("Utgard (Mali-400)", supportsTE = false, supportsAFBC = false),
+        MIDGARD("Midgard (T-Series)", supportsTE = true, supportsAFBC = false),
+        BIFROST("Bifrost (G-Series)", supportsTE = true, supportsAFBC = true),
+        VALHALL("Valhall (G-7xx)", supportsTE = true, supportsAFBC = true),
+        UNKNOWN("Unknown", supportsTE = false, supportsAFBC = false)
     }
 
     private var cachedRenderer: String? = null
     private var cachedVendor: String? = null
+    private var cachedExtensions: String? = null
 
     fun getVendor(context: Context): String {
         if (cachedVendor == null) detectGpuDetails()
@@ -38,24 +39,41 @@ object GpuInfo {
     }
 
     /**
-     * Specifically detects the Mali Architecture generation.
-     * Useful for applying specific shader hacks or performance profiles.
+     * Detects specific Mali features like Transaction Elimination (TE) 
+     * which helps reduce redundant tile writes to memory.
      */
     fun getMaliArchitecture(context: Context): MaliArchitecture {
         val renderer = getRenderer(context).uppercase()
         if (!renderer.contains("MALI")) return MaliArchitecture.UNKNOWN
 
         return when {
-            // Valhall: G77, G78, G710, G715, G610, G615, G310
             renderer.matches(Regex(".*MALI-G[367][17][05].*")) -> MaliArchitecture.VALHALL
-            // Bifrost: G31, G51, G52, G71, G72, G76
             renderer.matches(Regex(".*MALI-G[357][126].*")) -> MaliArchitecture.BIFROST
-            // Midgard: T604, T628, T720, T760, T820, T830, T860, T880
             renderer.contains("MALI-T") -> MaliArchitecture.MIDGARD
-            // Utgard: Mali-300, 400, 450, 470
             renderer.matches(Regex(".*MALI-[34][057]0.*")) -> MaliArchitecture.UTGARD
             else -> MaliArchitecture.UNKNOWN
         }
+    }
+
+    /**
+     * Checks if the current Mali GPU supports Transaction Elimination.
+     * This allows the emulator to skip rendering tiles that haven't changed.
+     */
+    fun supportsTransactionElimination(context: Context): Boolean {
+        return getMaliArchitecture(context).supportsTE
+    }
+
+    /**
+     * Checks for AFBC (Arm Frame Buffer Compression) support.
+     * AFBC reduces bandwidth for textures and framebuffers.
+     */
+    fun supportsAFBC(context: Context): Boolean {
+        if (cachedExtensions == null) detectGpuDetails()
+        val architecture = getMaliArchitecture(context)
+        
+        // Check both architecture default and extension string for safety
+        return architecture.supportsAFBC || 
+               cachedExtensions?.contains("GL_ARM_shader_framebuffer_fetch") == true
     }
 
     fun isVulkanSupported(context: Context): Boolean {
@@ -81,8 +99,10 @@ object GpuInfo {
             val surface = egl.eglCreatePbufferSurface(display, config, surfAttr)
 
             egl.eglMakeCurrent(display, surface, surface, context)
+            
             cachedRenderer = GLES20.glGetString(GLES20.GL_RENDERER)
             cachedVendor = GLES20.glGetString(GLES20.GL_VENDOR)
+            cachedExtensions = GLES20.glGetString(GLES20.GL_EXTENSIONS)
 
             egl.eglMakeCurrent(display, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT)
             egl.eglDestroySurface(display, surface)
@@ -91,6 +111,7 @@ object GpuInfo {
         } catch (e: Exception) {
             cachedRenderer = "Detection Failed"
             cachedVendor = "Unknown"
+            cachedExtensions = ""
         }
     }
 }
