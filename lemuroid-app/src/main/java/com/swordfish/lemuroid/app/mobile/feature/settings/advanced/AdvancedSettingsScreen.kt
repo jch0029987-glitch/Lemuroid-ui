@@ -51,7 +51,22 @@ private fun InputSettings() {
             title = { Text(text = stringResource(id = R.string.settings_title_enable_rumble)) },
             subtitle = { Text(text = stringResource(id = R.string.settings_description_enable_rumble)) },
         )
-        // ... (rest of your input settings)
+        LemuroidSettingsSwitch(
+            enabled = rumbleEnabled.value,
+            state = booleanPreferenceState(R.string.pref_key_enable_device_rumble, false),
+            title = { Text(text = stringResource(id = R.string.settings_title_enable_device_rumble)) },
+            subtitle = { Text(text = stringResource(id = R.string.settings_description_enable_device_rumble)) },
+        )
+        LemuroidSettingsSlider(
+            state = intPreferenceState(
+                key = stringResource(id = R.string.pref_key_tilt_sensitivity_index),
+                default = 6,
+            ),
+            steps = 10,
+            valueRange = 0f..10f,
+            enabled = true,
+            title = { Text(text = stringResource(R.string.settings_title_tilt_sensitivity)) },
+        )
     }
 }
 
@@ -66,8 +81,28 @@ private fun GeneralSettings(
     LemuroidCardSettingsGroup(
         title = { Text(text = stringResource(id = R.string.settings_category_general)) },
     ) {
+        LemuroidSettingsSwitch(
+            state = booleanPreferenceState(R.string.pref_key_low_latency_audio, false),
+            title = { Text(text = stringResource(id = R.string.settings_title_low_latency_audio)) },
+            subtitle = { Text(text = stringResource(id = R.string.settings_description_low_latency_audio)) },
+        )
+        LemuroidSettingsList(
+            title = { Text(text = stringResource(R.string.settings_title_maximum_cache_usage)) },
+            items = cacheState.displayNames,
+            state = indexPreferenceState(
+                R.string.pref_key_max_cache_size,
+                cacheState.default,
+                cacheState.values,
+            ),
+        )
+        LemuroidSettingsSwitch(
+            state = booleanPreferenceState(R.string.pref_key_allow_direct_game_load, true),
+            title = { Text(text = stringResource(id = R.string.settings_title_direct_game_load)) },
+            subtitle = { Text(text = stringResource(id = R.string.settings_description_direct_game_load)) },
+        )
         LemuroidSettingsMenuLink(
             title = { Text(text = stringResource(id = R.string.settings_title_reset_settings)) },
+            subtitle = { Text(text = stringResource(id = R.string.settings_description_reset_settings)) },
             onClick = { factoryResetDialogState.value = true },
         )
     }
@@ -83,7 +118,27 @@ private fun FactoryResetDialog(
     viewModel: AdvancedSettingsViewModel,
     navController: NavController,
 ) {
-    // ... (Your existing dialog code)
+    val onDismiss = { factoryResetDialogState.value = false }
+    AlertDialog(
+        title = { Text(stringResource(id = R.string.reset_settings_warning_message_title)) },
+        text = { Text(stringResource(id = R.string.reset_settings_warning_message_description)) },
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    viewModel.resetAllSettings()
+                    navController.popBackStack(MainRoute.SETTINGS.route, false)
+                },
+            ) {
+                Text(text = stringResource(id = R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(id = R.string.cancel))
+            }
+        },
+    )
 }
 
 @Composable
@@ -102,7 +157,6 @@ private fun GpuInfoSection() {
             onClick = {}
         )
 
-        // Fixed: Passing 'context' to isVulkanSupported
         LemuroidSettingsMenuLink(
             title = { Text("Vulkan Supported: ${GpuInfo.isVulkanSupported(context)}") },
             onClick = {}
@@ -116,21 +170,19 @@ private fun GpuInfoSection() {
                 onClick = {}
             )
 
-            // Extensive Feature: Transaction Elimination
             if (architecture.supportsTE) {
                 LemuroidSettingsSwitch(
                     state = booleanPreferenceState(R.string.pref_key_mali_te, true),
-                    title = { Text("Transaction Elimination") },
-                    subtitle = { Text("Reduces power consumption by skipping redundant tile rendering.") }
+                    title = { Text(text = stringResource(R.string.settings_title_mali_te)) },
+                    subtitle = { Text(text = stringResource(R.string.settings_description_mali_te)) }
                 )
             }
 
-            // Extensive Feature: AFBC
             if (GpuInfo.supportsAFBC(context)) {
                 LemuroidSettingsSwitch(
                     state = booleanPreferenceState(R.string.pref_key_mali_afbc, true),
-                    title = { Text("Force AFBC") },
-                    subtitle = { Text("Lossless framebuffer compression to reduce memory bandwidth.") }
+                    title = { Text(text = stringResource(R.string.settings_title_mali_afbc)) },
+                    subtitle = { Text(text = stringResource(R.string.settings_description_mali_afbc)) }
                 )
             }
         }

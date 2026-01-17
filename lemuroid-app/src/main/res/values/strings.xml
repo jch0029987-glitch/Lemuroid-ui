@@ -232,5 +232,10 @@
     <string name="tilt_configuration_buttons_l_r">L - R</string>
     <string name="tilt_configuration_buttons_l1_r1">L1 - R1</string>
     <string name="tilt_configuration_buttons_l2_r2">L2 - R2</string>
-
+<string name="pref_key_mali_te">mali_transaction_elimination</string>
+    <string name="pref_key_mali_afbc">mali_force_afbc</string>
+    <string name="settings_title_mali_te">Transaction Elimination</string>
+    <string name="settings_description_mali_te">Reduces power consumption by skipping redundant tile rendering.</string>
+    <string name="settings_title_mali_afbc">Force AFBC</string>
+    <string name="settings_description_mali_afbc">Lossless framebuffer compression to reduce memory bandwidth.</string
 </resources>
