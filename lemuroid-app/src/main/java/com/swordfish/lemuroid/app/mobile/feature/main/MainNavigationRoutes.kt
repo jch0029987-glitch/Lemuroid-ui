@@ -60,7 +60,7 @@ enum class MainRoute(
         route = "systems/{metaSystemId}",
         titleId = R.string.title_games,
         parent = SYSTEMS,
-        listOf(navArgument("metaSystemId") { type = NavType.StringType }),
+        arguments = listOf(navArgument("metaSystemId") { type = NavType.StringType }),
     ),
     SETTINGS(
         route = "settings/home",
@@ -97,6 +97,12 @@ enum class MainRoute(
         parent = SETTINGS,
         showBottomNavigation = false,
     ),
+    MALI_SETTINGS(
+        route = "settings/mali",
+        titleId = R.string.settings_title_mali_te,
+        parent = SETTINGS,
+        showBottomNavigation = false,
+    ),
     ;
 
     val root = root()
@@ -107,7 +113,7 @@ enum class MainRoute(
 
     companion object {
         fun findByRoute(route: String): MainRoute {
-            return values().first { it.route == route }
+            return entries.firstOrNull { it.route == route } ?: HOME
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.swordfish.lemuroid.app.mobile.feature.settings.advanced
 
-import com.swordfish.lemuroid.common.system.GpuInfo
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -12,12 +10,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.swordfish.lemuroid.R
 import com.swordfish.lemuroid.app.mobile.feature.main.MainRoute
 import com.swordfish.lemuroid.app.utils.android.settings.*
+import com.swordfish.lemuroid.common.system.GpuInfo
 
 @Composable
 fun AdvancedSettingsScreen(
@@ -36,7 +36,7 @@ fun AdvancedSettingsScreen(
 
         InputSettings()
         GeneralSettings(uiState.cache, viewModel, navController)
-        GpuInfoSection()
+        GpuInfoSection(navController)
     }
 }
 
@@ -142,49 +142,24 @@ private fun FactoryResetDialog(
 }
 
 @Composable
-private fun GpuInfoSection() {
+private fun GpuInfoSection(navController: NavController) {
     val context = LocalContext.current
     val vendor = GpuInfo.getVendor(context)
-    val renderer = GpuInfo.getRenderer(context)
-    val isMali = vendor == "ARM"
+    val isMali = vendor.contains("ARM", ignoreCase = true)
 
-    LemuroidCardSettingsGroup(
-        title = { Text("GPU & Performance") }
-    ) {
-        LemuroidSettingsMenuLink(
-            title = { Text("Vendor: $vendor") },
-            subtitle = { Text("Renderer: $renderer") },
-            onClick = {}
-        )
-
-        LemuroidSettingsMenuLink(
-            title = { Text("Vulkan Supported: ${GpuInfo.isVulkanSupported(context)}") },
-            onClick = {}
-        )
-
+    LemuroidCardSettingsGroup(title = { Text("Hardware Information") }) {
         if (isMali) {
-            val architecture = GpuInfo.getMaliArchitecture(context)
-            
             LemuroidSettingsMenuLink(
-                title = { Text("Mali Architecture: ${architecture.generation}") },
+                title = { Text("Mali Extensive Features") },
+                subtitle = { Text("Configure hardware-specific rendering optimizations") },
+                onClick = { navController.navigate(MainRoute.MALI_SETTINGS.route) }
+            )
+        } else {
+            LemuroidSettingsMenuLink(
+                title = { Text("GPU Vendor: $vendor") },
+                subtitle = { Text("Renderer: ${GpuInfo.getRenderer(context)}") },
                 onClick = {}
             )
-
-            if (architecture.supportsTE) {
-                LemuroidSettingsSwitch(
-                    state = booleanPreferenceState(R.string.pref_key_mali_te, true),
-                    title = { Text(text = stringResource(R.string.settings_title_mali_te)) },
-                    subtitle = { Text(text = stringResource(R.string.settings_description_mali_te)) }
-                )
-            }
-
-            if (GpuInfo.supportsAFBC(context)) {
-                LemuroidSettingsSwitch(
-                    state = booleanPreferenceState(R.string.pref_key_mali_afbc, true),
-                    title = { Text(text = stringResource(R.string.settings_title_mali_afbc)) },
-                    subtitle = { Text(text = stringResource(R.string.settings_description_mali_afbc)) }
-                )
-            }
         }
     }
 }

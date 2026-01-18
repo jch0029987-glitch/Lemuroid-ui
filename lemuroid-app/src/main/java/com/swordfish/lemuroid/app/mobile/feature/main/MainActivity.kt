@@ -44,6 +44,7 @@ import com.swordfish.lemuroid.app.mobile.feature.settings.general.SettingsScreen
 import com.swordfish.lemuroid.app.mobile.feature.settings.general.SettingsViewModel
 import com.swordfish.lemuroid.app.mobile.feature.settings.inputdevices.InputDevicesSettingsScreen
 import com.swordfish.lemuroid.app.mobile.feature.settings.inputdevices.InputDevicesSettingsViewModel
+import com.swordfish.lemuroid.app.mobile.feature.settings.mali.MaliSettingsScreen
 import com.swordfish.lemuroid.app.mobile.feature.settings.savesync.SaveSyncSettingsScreen
 import com.swordfish.lemuroid.app.mobile.feature.settings.savesync.SaveSyncSettingsViewModel
 import com.swordfish.lemuroid.app.mobile.feature.shortcuts.ShortcutsGenerator
@@ -56,6 +57,8 @@ import com.swordfish.lemuroid.app.shared.game.GameLauncher
 import com.swordfish.lemuroid.app.shared.input.InputDeviceManager
 import com.swordfish.lemuroid.app.shared.main.BusyActivity
 import com.swordfish.lemuroid.app.shared.main.GameLaunchTaskHandler
+import com.swordfish.lemuroid.app.shared.main.MainTopBar
+import com.swordfish.lemuroid.app.shared.main.MainNavigationBar
 import com.swordfish.lemuroid.app.shared.settings.SettingsInteractor
 import com.swordfish.lemuroid.common.coroutines.safeLaunch
 import com.swordfish.lemuroid.ext.feature.review.ReviewManager
@@ -202,7 +205,7 @@ class MainActivity : RetrogradeComponentActivity(), BusyActivity {
                                 ),
                             onGameClick = onGameClick,
                             onGameLongClick = onGameLongClick,
-                            onOpenCoreSelection = { navController.navigateToRoute(MainRoute.SETTINGS_CORES_SELECTION) },
+                            onOpenCoreSelection = { navController.navigate(MainRoute.SETTINGS_CORES_SELECTION.route) },
                         )
                     }
                     composable(MainRoute.FAVORITES) {
@@ -311,7 +314,7 @@ class MainActivity : RetrogradeComponentActivity(), BusyActivity {
                                 viewModel(
                                     factory =
                                         CoresSelectionViewModel.Factory(
-                                            applicationContext,
+                                            application,
                                             coresSelection,
                                         ),
                                 ),
@@ -341,6 +344,11 @@ class MainActivity : RetrogradeComponentActivity(), BusyActivity {
                                             saveSyncManager,
                                         ),
                                 ),
+                        )
+                    }
+                    composable(MainRoute.MALI_SETTINGS) {
+                        MaliSettingsScreen(
+                            navController = navController
                         )
                     }
                 }
