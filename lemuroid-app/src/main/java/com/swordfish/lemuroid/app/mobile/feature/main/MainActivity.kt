@@ -348,6 +348,7 @@ class MainActivity : RetrogradeComponentActivity(), BusyActivity {
                     }
                     composable(MainRoute.MALI_SETTINGS) {
                         MaliSettingsScreen(
+                            modifier = Modifier.padding(padding),
                             navController = navController
                         )
                     }

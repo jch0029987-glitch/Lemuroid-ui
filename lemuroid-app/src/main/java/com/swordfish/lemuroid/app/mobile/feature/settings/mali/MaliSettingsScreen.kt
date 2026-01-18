@@ -21,11 +21,10 @@ fun MaliSettingsScreen(
 
     LemuroidSettingsPage(
         modifier = modifier.fillMaxSize(),
-        title = { Text("Mali Extensive Features") },
-        onBackClick = { navController.popBackStack() }
     ) {
-        LemuroidCardSettingsGroup(title = { Text("Architecture: ${architecture.generation}") }) {
-            // Transaction Elimination
+        LemuroidCardSettingsGroup(
+            title = { Text(text = "Mali Extensive Features") }
+        ) {
             if (architecture.supportsTE) {
                 LemuroidSettingsSwitch(
                     state = booleanPreferenceState(R.string.pref_key_mali_te, true),
@@ -34,7 +33,6 @@ fun MaliSettingsScreen(
                 )
             }
 
-            // ARM Frame Buffer Compression
             if (GpuInfo.supportsAFBC(context)) {
                 LemuroidSettingsSwitch(
                     state = booleanPreferenceState(R.string.pref_key_mali_afbc, true),
@@ -44,15 +42,17 @@ fun MaliSettingsScreen(
             }
         }
 
-        LemuroidCardSettingsGroup(title = { Text("Device Diagnostics") }) {
+        LemuroidCardSettingsGroup(
+            title = { Text(text = "GPU Information") }
+        ) {
             LemuroidSettingsMenuLink(
-                title = { Text("Vulkan Support") },
-                subtitle = { Text(if (GpuInfo.isVulkanSupported(context)) "Available" else "Not Supported") },
+                title = { Text(text = "Architecture") },
+                subtitle = { Text(text = architecture.generation) },
                 onClick = {}
             )
             LemuroidSettingsMenuLink(
-                title = { Text("GPU Renderer") },
-                subtitle = { Text(GpuInfo.getRenderer(context)) },
+                title = { Text(text = "Renderer") },
+                subtitle = { Text(text = GpuInfo.getRenderer(context)) },
                 onClick = {}
             )
         }
