@@ -20,15 +20,14 @@ fun MaliSettingsScreen(
     val context = LocalContext.current
     val architecture = GpuInfo.getMaliArchitecture(context)
 
+    // FIXED: Removed 'title' and 'onBackClick' which don't exist in your version
     LemuroidSettingsPage(
-        modifier = modifier.fillMaxSize(),
-        title = stringResource(R.string.settings_title_mali_te), // Passing string directly
-        onBackClick = { navController.popBackStack() }
+        modifier = modifier.fillMaxSize()
     ) {
-        // Essential: Wrapping in Column fixes the '@Composable invocations' error
+        // FIXED: Added Column to provide the correct Composable context
         Column {
             LemuroidCardSettingsGroup(
-                title = { Text(text = "Hardware Performance") }
+                title = { Text(text = "Mali Hardware Tweaks") }
             ) {
                 if (architecture.supportsTE) {
                     LemuroidSettingsSwitch(
@@ -42,13 +41,13 @@ fun MaliSettingsScreen(
                     LemuroidSettingsSwitch(
                         state = booleanPreferenceState(R.string.pref_key_mali_afbc, true),
                         title = { Text(text = "Force AFBC") },
-                        subtitle = { Text(text = "Enable Arm Frame Buffer Compression for supported cores") }
+                        subtitle = { Text(text = "Enable Arm Frame Buffer Compression") }
                     )
                 }
             }
 
             LemuroidCardSettingsGroup(
-                title = { Text(text = "GPU Diagnostics") }
+                title = { Text(text = "GPU Information") }
             ) {
                 LemuroidSettingsMenuLink(
                     title = { Text(text = "Renderer") },
