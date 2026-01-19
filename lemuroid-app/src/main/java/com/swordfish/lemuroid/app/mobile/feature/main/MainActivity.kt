@@ -205,7 +205,7 @@ class MainActivity : RetrogradeComponentActivity(), BusyActivity {
                                 ),
                             onGameClick = onGameClick,
                             onGameLongClick = onGameLongClick,
-                            onOpenCoreSelection = { navController.navigate(MainRoute.SETTINGS_CORES_SELECTION.route) },
+                            onOpenCoreSelection = { navController.navigateToRoute(MainRoute.SETTINGS_CORES_SELECTION) },
                         )
                     }
                     composable(MainRoute.FAVORITES) {
@@ -314,7 +314,7 @@ class MainActivity : RetrogradeComponentActivity(), BusyActivity {
                                 viewModel(
                                     factory =
                                         CoresSelectionViewModel.Factory(
-                                            application,
+                                            applicationContext,
                                             coresSelection,
                                         ),
                                 ),

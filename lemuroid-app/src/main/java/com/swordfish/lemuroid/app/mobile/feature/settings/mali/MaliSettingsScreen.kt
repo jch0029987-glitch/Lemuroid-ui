@@ -1,5 +1,6 @@
 package com.swordfish.lemuroid.app.mobile.feature.settings.mali
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,40 +22,40 @@ fun MaliSettingsScreen(
 
     LemuroidSettingsPage(
         modifier = modifier.fillMaxSize(),
+        title = stringResource(R.string.settings_title_mali_te), // Passing string directly
+        onBackClick = { navController.popBackStack() }
     ) {
-        LemuroidCardSettingsGroup(
-            title = { Text(text = "Mali Extensive Features") }
-        ) {
-            if (architecture.supportsTE) {
-                LemuroidSettingsSwitch(
-                    state = booleanPreferenceState(R.string.pref_key_mali_te, true),
-                    title = { Text(text = stringResource(R.string.settings_title_mali_te)) },
-                    subtitle = { Text(text = stringResource(R.string.settings_description_mali_te)) }
-                )
+        // Essential: Wrapping in Column fixes the '@Composable invocations' error
+        Column {
+            LemuroidCardSettingsGroup(
+                title = { Text(text = "Hardware Performance") }
+            ) {
+                if (architecture.supportsTE) {
+                    LemuroidSettingsSwitch(
+                        state = booleanPreferenceState(R.string.pref_key_mali_te, true),
+                        title = { Text(text = stringResource(R.string.settings_title_mali_te)) },
+                        subtitle = { Text(text = stringResource(R.string.settings_description_mali_te)) }
+                    )
+                }
+
+                if (GpuInfo.supportsAFBC(context)) {
+                    LemuroidSettingsSwitch(
+                        state = booleanPreferenceState(R.string.pref_key_mali_afbc, true),
+                        title = { Text(text = "Force AFBC") },
+                        subtitle = { Text(text = "Enable Arm Frame Buffer Compression for supported cores") }
+                    )
+                }
             }
 
-            if (GpuInfo.supportsAFBC(context)) {
-                LemuroidSettingsSwitch(
-                    state = booleanPreferenceState(R.string.pref_key_mali_afbc, true),
-                    title = { Text(text = stringResource(R.string.settings_title_mali_afbc)) },
-                    subtitle = { Text(text = stringResource(R.string.settings_description_mali_afbc)) }
+            LemuroidCardSettingsGroup(
+                title = { Text(text = "GPU Diagnostics") }
+            ) {
+                LemuroidSettingsMenuLink(
+                    title = { Text(text = "Renderer") },
+                    subtitle = { Text(text = GpuInfo.getRenderer(context)) },
+                    onClick = {}
                 )
             }
-        }
-
-        LemuroidCardSettingsGroup(
-            title = { Text(text = "GPU Information") }
-        ) {
-            LemuroidSettingsMenuLink(
-                title = { Text(text = "Architecture") },
-                subtitle = { Text(text = architecture.generation) },
-                onClick = {}
-            )
-            LemuroidSettingsMenuLink(
-                title = { Text(text = "Renderer") },
-                subtitle = { Text(text = GpuInfo.getRenderer(context)) },
-                onClick = {}
-            )
         }
     }
 }
